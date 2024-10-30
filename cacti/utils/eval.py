@@ -57,15 +57,15 @@ def eval_psnr_ssim(model,test_data,mask,mask_s,args):
     if not osp.exists(test_dir):
         os.makedirs(test_dir)
 
-    for i,name in enumerate(test_data.data_name_list):
-        _name,_ = name.split("_")
-        psnr_dict[_name] = psnr_list[i]
-        ssim_dict[_name] = ssim_list[i]
-        out = out_list[i]
-        gt = gt_list[i]
-        for j in range(out.shape[0]):
-            image_name = osp.join(test_dir,_name+"_"+str(j)+".png")
-            save_image(out[j],gt[j],image_name)
+    # for i,name in enumerate(test_data.data_name_list):
+    #     _name,_ = name.split("_")
+    #     psnr_dict[_name] = psnr_list[i]
+    #     ssim_dict[_name] = ssim_list[i]
+    #     out = out_list[i]
+    #     gt = gt_list[i]
+    #     for j in range(out.shape[0]):
+    #         image_name = osp.join(test_dir,_name+"_"+str(j)+".png")
+    #         save_image(out[j],gt[j],image_name)
     psnr_dict["psnr_mean"] = np.mean(psnr_list)
     ssim_dict["ssim_mean"] = np.mean(ssim_list)
     return psnr_dict,ssim_dict

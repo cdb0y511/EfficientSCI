@@ -4,8 +4,8 @@ _base_=[
         "../_base_/default_runtime.py"
         ]
 test_data = dict(
-    data_root="test_datasets/middle_scale",
-    mask_path="test_datasets/mask/mid_color_mask.mat",
+    data_root="../test_datasets/middle_scale",
+    mask_path="../test_datasets/mask/mid_color_mask.mat",
     rot_flip_flag=True
 )
 resize_h,resize_w = 128,128
@@ -39,4 +39,4 @@ eval=dict(
     flag=True,
     interval=1
 )
-checkpoints="checkpoints/efficientsci_base_mid_color.pth"
+checkpoints="../checkpoints/efficientsci_base_mid_color.pth"

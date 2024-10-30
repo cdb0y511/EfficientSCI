@@ -96,8 +96,10 @@ def main():
 
     mask,mask_s = generate_masks(cfg.train_data.mask_path,cfg.train_data.mask_shape)
     train_data = build_dataset(cfg.train_data,{"mask":mask})
+    mask_test, mask_test_s = None,None
     if cfg.eval.flag:
-        test_data = build_dataset(cfg.test_data,{"mask":mask})
+        mask_test, mask_test_s = generate_masks(cfg.test_data.mask_path, cfg.test_data.mask_shape)
+        test_data = build_dataset(cfg.test_data,{"mask":mask_test})
     if args.distributed:
         dist_sampler = DistributedSampler(train_data,shuffle=True)
         train_data_loader = DataLoader(dataset=train_data, 
@@ -195,9 +197,9 @@ def main():
 
         if rank==0 and cfg.eval.flag and epoch % cfg.eval.interval==0:
             if args.distributed:
-                psnr_dict,ssim_dict = eval_psnr_ssim(model.module,test_data,mask,mask_s,args)
+                psnr_dict,ssim_dict = eval_psnr_ssim(model.module,test_data,mask_test,mask_test_s,args)
             else:
-                psnr_dict,ssim_dict = eval_psnr_ssim(model,test_data,mask,mask_s,args)
+                psnr_dict,ssim_dict = eval_psnr_ssim(model,test_data,mask_test,mask_test_s,args)
 
             psnr_str = ", ".join([key+": "+"{:.4f}".format(psnr_dict[key]) for key in psnr_dict.keys()])
             ssim_str = ", ".join([key+": "+"{:.4f}".format(ssim_dict[key]) for key in ssim_dict.keys()])
