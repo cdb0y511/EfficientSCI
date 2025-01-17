@@ -23,7 +23,8 @@ train_data = dict(
     pipeline = train_pipeline
 )
 test_data = dict(
-    mask_path="test_datasets/mask/efficientsci_mask.mat"
+    mask_path="../test_datasets/mask/efficientsci_mask.mat",
+    data_root = "../test_datasets/simulation"
 )
 
 model = dict(

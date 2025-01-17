@@ -6,7 +6,8 @@ _base_=[
 test_data = dict(
     data_root="../test_datasets/middle_scale",
     mask_path="../test_datasets/mask/mid_color_mask.mat",
-    rot_flip_flag=True
+    rot_flip_flag=True,
+    #transpose = False
 )
 resize_h,resize_w = 128,128
 train_pipeline = [ 
@@ -29,7 +30,7 @@ data = dict(
 
 model = dict(
     type='EfficientSCI',
-    in_ch=64, 
+    in_ch=64,
     units=8,
     group_num=4,
     color_ch=3

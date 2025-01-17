@@ -3,6 +3,8 @@ import numpy as np
 import cv2
 import os.path as osp
 import einops
+
+from cacti.utils.convertNerf2Matlab_bayer import convertNerf
 from cacti.utils.demosaic import demosaicing_CFA_Bayer_Menon2007 as demosaicing_bayer
 
 def get_device_info():
@@ -58,21 +60,27 @@ def save_image(out,gt,image_name,show_flag=False):
         cv2.namedWindow("image",0)
         cv2.imshow("image",result_img.astype(np.uint8))
         cv2.waitKey(0)
-def save_single_image(images,image_dir,batch,name="",demosaic=False):
+def save_single_image(images,image_dir,batch,name="",demosaic=False,combineRGB=False):
     images = images*255
     if len(images.shape)==4:
         frames = images.shape[1]
     else:
         frames = images.shape[0]
-    for i in range(frames):
-        begin_frame = batch*frames
-        if len(images.shape)==4:
-            single_image = images[:,i].transpose(1,2,0)[:,:,::-1]
-        else:
-            single_image = images[i]
-        if demosaic:
-            single_image = demosaicing_bayer(single_image,pattern='BGGR')
-        cv2.imwrite(osp.join(image_dir,name+"_"+str(begin_frame+i+1)+".png"),single_image)
+    if combineRGB:
+        begin_frame  = 0
+        for i in range(frames):
+            single_image = (np.dstack((images[0][i],images[1][i],images[2][i]))).astype(np.uint8)
+            cv2.imwrite(osp.join(image_dir, name + "_" + str(begin_frame + i + 1) + ".png"), single_image)
+    else:
+        for i in range(frames):
+            begin_frame = batch*frames
+            if len(images.shape)==4:
+                single_image = images[:,i].transpose(1,2,0)[:,:,::-1]
+            else:
+                single_image = images[i]
+            if demosaic:
+                single_image = demosaicing_bayer(single_image,pattern='BGGR')
+            cv2.imwrite(osp.join(image_dir,name+"_"+str(begin_frame+i+1)+".png"),single_image)
         
         
 def A(x,Phi):
